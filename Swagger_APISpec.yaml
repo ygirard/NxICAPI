@@ -1,0 +1,244 @@
+swagger: '2.0'
+info:
+  title: Nexway Intelligence Center CRM API
+  description: Transfer your customer information for CRM and marketing purposes
+  version: "1.0.2"
+# the domain of the service
+host: nxic.api.nexway.io
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1.0.2
+produces:
+  - application/json
+paths:
+  /users:
+    post:
+      summary: Sends out information about a new user , after creation or transformation
+      description: The service sends out new users information to Nexway 
+      operationId: addUser
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: body
+          description: user to add to the CRM
+          required: true
+          schema:
+            $ref: '#/definitions/newUser'
+      responses:
+        '200':
+          description: user response
+          schema:
+            $ref: '#/definitions/user'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+definitions:
+  user:
+    type: object
+    required:
+      - email
+      - optin_optout
+      - point_of_origin
+    properties:
+      point_of_origin:
+        type: string
+        description: A conventional client defined description of the origin of the data (i-e a website, an app...)
+      email:
+        type: string
+        description: The user e-mail requiered with every API call. 
+        format:   /\A([\w+\-](\.[\w+\-])?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i 
+      title:
+        type: string
+        description: name title (Mr , Ms etc..)  -need other language to be added-
+        enum: ["Mr","Ms","M","Mme","Dr","Sir"]
+      first_name:
+        type: string
+        description: client first name
+        format: /(\W\w+\-?)+/
+      family_name:
+        type: string
+        description: client family name
+        format: /(\W\w+\-?)+/
+      date_of_birth:
+        type: string
+        description: client date of birth
+        format: yyyy-mm-dd    
+      postal_adress:
+        type: string
+        description: the client core of its postal adress
+      zip_code:
+        type: string
+        description: the client zip-code.  
+      state:
+        type: string
+        description: state of the user (i-e dakota for the US , land for Germany, departement for France)
+      town:
+        type: string
+        description: urban center of reference for the user adress
+      country:
+        type: string
+        description: user country
+      private_pro:
+        type: string
+        description: context of the user , professional use or private use
+        enum: ["private","pro"]
+      phone_number:
+       type: string
+       description: telephone number of the user
+       format: /\d+/
+      company_name:
+       type: string
+       description: company name in the case of a professional use
+      VAT_FTIN_number:
+       type: string
+       description: the VAT number of the company. Format to be checked by our internl VAT checker. 
+      company_registration_number:
+        type: string
+        description: specific number attached to a company
+      company_size:
+        type: string
+        description: category of the company in terms of number of employees
+        enum: ["less than 50","51-200","200-1000","1000+"]
+      third_party_accounts:
+        type: string
+        description: usual third party account API descriptors such as google+,twitter,linkedin,facebook (more to come)
+        enum: ["google+","twitter","linkedin","facebook"]
+      optin_optout:
+        type: string
+        description: status in terms of marketing 
+        enum: ["optin","optout"]
+      user_status: 
+        type: string
+        enum: ["registered","freemium","licensed","trial user","none"]
+        description : registered => created an account without any services involved |
+                      freemium => created an account with access to a free service |
+                      licensed => owns a valid licence
+                      trial user => owns a trial licence with a fixed expiration date
+                      none =>  for users who purchased for a third party without creating an account themselves
+      purchaser_status:
+        type: boolean
+        description: did the user buy a licence. 
+      currency: 
+        type: string
+        description: appliable currency for the users
+        enum: ["any", "currencies", "appliable", "to be filled later"]
+      language:
+        type: string
+        description: list of language supported by the API
+        enum: ["to","be","added"]
+      licence_id: 
+        type: string
+        description: licence to be added to the user account
+        format: variable but set
+  newUser:
+    type: object
+    required:
+      - email
+      - optin_optout
+      - point_of_origin
+    properties:
+      point_of_origin:
+        type: string
+        description: A conventional client defined description of the origin of the data (i-e a website, an app...)
+      email:
+        type: string
+        description: The user e-mail requiered with every API call. 
+        format:   /\A([\w+\-](\.[\w+\-])?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i 
+      title:
+        type: string
+        description: name title (Mr , Ms etc..)  -need other language to be added-
+        enum: ["Mr","Ms","M","Mme","Dr","Sir"]
+      first_name:
+        type: string
+        description: client first name
+        format: /(\W\w+\-?)+/
+      family_name:
+        type: string
+        description: client family name
+        format: /(\W\w+\-?)+/
+      date_of_birth:
+        type: string
+        description: client date of birth
+        format: yyyy-mm-dd    
+      postal_adress:
+        type: string
+        description: the client core of its postal adress
+      zip_code:
+        type: string
+        description: the client zip-code.  
+      state:
+        type: string
+        description: state of the user (i-e dakota for the US , land for Germany, departement for France)
+      town:
+        type: string
+        description: urban center of reference for the user adress
+      country:
+        type: string
+        description: user country
+      private_pro:
+        type: string
+        description: context of the user , professional use or private use
+        enum: ["private","pro"]
+      phone_number:
+       type: string
+       description: telephone number of the user
+       format: /\d+/
+      company_name:
+       type: string
+       description: company name in the case of a professional use
+      VAT_FTIN_number:
+       type: string
+       description: the VAT number of the company. Format to be checked by our internl VAT checker. 
+      company_registration_number:
+        type: string
+        description: specific number attached to a company
+      company_size:
+        type: string
+        description: category of the company in terms of number of employees
+        enum: ["less than 50","51-200","200-1000","1000+"]
+      third_party_accounts:
+        type: string
+        description: usual third party account API descriptors such as google+,twitter,linkedin,facebook (more to come)
+        enum: ["google+","twitter","linkedin","facebook"]
+      optin_optout:
+        type: string
+        description: status in terms of marketing 
+        enum: ["optin","optout"]
+      user_status: 
+        type: string
+        enum: ["registered","freemium","licensed","trial user","none"]
+        description : registered => created an account without any services involved |
+                      freemium => created an account with access to a free service |
+                      licensed => owns a valid licence
+                      trial user => owns a trial licence with a fixed expiration date
+                      none =>  for users who purchased for a third party without creating an account themselves
+      purchaser_status:
+        type: boolean
+        description : did the user buy a licence.
+      currency: 
+        type: string
+        description: appliable currency for the users
+        enum: ["any", "currencies", "appliable", "to be filled later"]
+      language:
+        type: string
+        description: list of language supported by the API
+        enum: ["to","be","added"]
+      licence_id: 
+        type: string
+        description: licence to be added to the user account
+        format: variable but set
+  errorModel:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
